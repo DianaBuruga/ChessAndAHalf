@@ -5,6 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChessAndAHalf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid/>
+        Title="MainWindow" Width="700" Height="700" ContentRendered="Window_ContentRendered">
+    <Border BorderBrush="Black" BorderThickness="5">
+        <Canvas Name="GameArea" ClipToBounds="True" Width="600" Height="600">
+        
+        </Canvas>
+    </Border>
 </Window>
