@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ChessAndAHalf.Data.Model;
+using ChessAndAHalf.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Image = System.Windows.Controls.Image;
 
 namespace ChessAndAHalf
 {
@@ -33,43 +36,56 @@ namespace ChessAndAHalf
 
         private void DrawGameArea()
         {
-            bool doneDrawingBackground = false;
-            int nextX = 0, nextY = 0;
-            int rowCounter = 0;
-            bool nextIsOdd = false;
-
-            while (doneDrawingBackground == false)
+            Game game = new Game();
+            for (int row = 0; row < game.Board.Size; row++)
             {
-                Rectangle rect = new Rectangle
+                for (int col = 0; col < game.Board.Size; col++)
                 {
-                    Width = SquareSize,
-                    Height = SquareSize,
-                    Fill = nextIsOdd ? Brushes.White : Brushes.DarkRed
-                };
-                rect.MouseDown += Rect_MouseDown;
-                GameArea.Children.Add(rect);
-                Canvas.SetTop(rect, nextY);
-                Canvas.SetLeft(rect, nextX);
+                    Rectangle square = new Rectangle
+                    {
+                        Width = SquareSize,
+                        Height = SquareSize,
+                        Stroke = Brushes.Black,
+                    };
+                
+                    if ((row + col) % 2 == 0)   
+                    {
+                        square.Fill = Brushes.White;
+                    }
+                    else
+                    {
+                        square.Fill = Brushes.Gray;
+                    }
 
-                nextIsOdd = !nextIsOdd;
-                nextX += SquareSize;
-                if (nextX >= GameArea.ActualWidth)
-                {
-                    nextX = 0;
-                    nextY += SquareSize;
-                    rowCounter++;
-                    nextIsOdd = (rowCounter % 2 != 0);
+                    Image image = new Image
+                    {
+                        Width = SquareSize,
+                        Height = SquareSize,
+                    };
+
+                    image.MouseDown += Image_MouseDown;
+
+                    Piece piece = game.Board.GetSquare(row, col).Occupant;
+                    if (piece != null)
+                    {
+                        image.Source = new BitmapImage(new Uri(piece.GetImagePath(), UriKind.Relative));
+                    }
+
+                    GameArea.Children.Add(square);
+                    GameArea.Children.Add(image);
+
+                    Canvas.SetTop(square, row * SquareSize);
+                    Canvas.SetLeft(square, col * SquareSize);
+                    Canvas.SetTop(image, row * SquareSize);
+                    Canvas.SetLeft(image, col * SquareSize);
                 }
-
-                if (nextY >= GameArea.ActualHeight)
-                    doneDrawingBackground = true;
             }
         }
 
-        private void Rect_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var rect = sender as Rectangle;
-            rect.Fill = Brushes.Blue;
+            var image = sender as Image;
+            image.Source = new BitmapImage(new Uri("../../Images/Pieces/whiteStarcat.png", UriKind.Relative));
         }
     }
 }

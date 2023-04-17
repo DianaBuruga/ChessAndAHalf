@@ -63,6 +63,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\Model\Board.cs" />
+    <Compile Include="Data\Model\Piece.cs" />
+    <Compile Include="Data\Model\Pieces\Cat.cs" />
+    <Compile Include="Data\Model\Pieces\StarCat.cs" />
+    <Compile Include="Data\Model\PlayerColor.cs" />
+    <Compile Include="Data\Model\Square.cs" />
+    <Compile Include="Logic\Game.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -93,6 +100,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Pieces\whiteCat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Pieces\whiteStarcat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Logic\Engine\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Pieces\blackCat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Pieces\blackStarcat.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
