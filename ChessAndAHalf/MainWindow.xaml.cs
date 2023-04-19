@@ -83,6 +83,10 @@ namespace ChessAndAHalf
                     {
                         highlightImage.Source = new BitmapImage(new Uri("../../Images/selectedSquare.png", UriKind.Relative));
                     }
+                    if (square.IsCaptured)
+                    {
+                        cell.Fill = Brushes.Red;
+                    }
 
                     GameArea.Children.Add(cell);
                     GameArea.Children.Add(pieceImage);

@@ -18,6 +18,7 @@ namespace ChessAndAHalf.Data.Model.Pieces
             int currentRow = currentSquare.GetRow();
             int currentColumn = currentSquare.GetColumn();
             List<Position> legalMoves = new List<Position>();
+            List<Position> captures = new List<Position>();
 
             int[,] directions = new int[,] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
 
@@ -27,14 +28,25 @@ namespace ChessAndAHalf.Data.Model.Pieces
                 {
                     Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
-                    if (square != null && square.Occupant == null)
+                    if (square != null)
                     {
                         Position position = square.Position;
-                        legalMoves.Add(position);
+                        if (square.Occupant == null)
+                        {
+                            legalMoves.Add(position);
+                        }
+                        else if (square.Occupant != null)
+                        {
+                            if (square.Occupant.Color != Color)
+                            {
+                                legalMoves.Add(position);
+                                captures.Add(position);
+                            }
+                        }
                     }
                 }
             }
-
+            Captures = captures;
             return legalMoves;
         }
     }

@@ -92,5 +92,16 @@ namespace ChessAndAHalf.Data.Model
                 }
             }
         }
+
+        public void ClearCaptures()
+        {
+            for (int row = 0; row < Size; row++)
+            {
+                for (int col = 0; col < Size; col++)
+                {
+                    squares[row, col].IsCaptured = false;
+                }
+            }
+        }
     }
 }

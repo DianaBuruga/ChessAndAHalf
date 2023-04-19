@@ -20,32 +20,49 @@ namespace ChessAndAHalf.Data.Model.Pieces
             int currentRow = currentSquare.GetRow();
             int currentColumn = currentSquare.GetColumn();
             List<Position> legalMoves = new List<Position>();
+            List<Position> captures = new List<Position>();
 
             int row = Color.Equals(PlayerColor.WHITE) ? -1 : 1;
 
             int[,] directions = new int[,] { { row, 0 }, { row, -1 }, { row, 1 } };
 
             int maxLevel = 0;
-            int index = 0;
+            int index = 0, level;
             maxLevel = isInFirstHalf(currentRow);
 
-            for (int level = 1; level <= maxLevel; level++)
+            for (level = 1; level <= maxLevel; level++)
             {
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
                 if (square != null)
                 {
+                    Position position = square.Position;
                     if (square.Occupant == null)
                     {
-                        Position position = square.Position;
                         legalMoves.Add(position);
                     }
-                    else if (square.Occupant != null)
+                   /* else if (square.Occupant != null)
                     {
-                        /*Position position = square.Position;
-                        legalMoves.Add(position);
-                        cand se ia piesa ar trebui sa fie ocupat*/
+                        if (square.Occupant.Color != Color)
+                        {
+                            legalMoves.Add(position);
+                            captures.Add(position);
+                        }
                         break;
+                    }*/
+                }
+            }
+            level = 1;
+            for (index = 1; index <= 2; index++)
+            {
+                Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
+                if (square.Occupant != null)
+                {
+                    Position position = square.Position;
+                    if (square.Occupant.Color != Color)
+                    {
+                        legalMoves.Add(position);
+                        captures.Add(position);
                     }
                 }
             }
@@ -73,6 +90,7 @@ namespace ChessAndAHalf.Data.Model.Pieces
                     legalMoves.Add(position);
                 }
             }*/
+            Captures = captures;
             return legalMoves;
         }
         private int isInFirstHalf(int currentRow)

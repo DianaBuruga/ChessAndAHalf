@@ -17,6 +17,7 @@ namespace ChessAndAHalf.Logic
         public void SelectPiece(int row, int column)
         {
             Board.ClearHighlight();
+            Board.ClearCaptures();
 
             Square selectedSquare = Board.GetSquare(row, column);
             List<Position> positions;
@@ -34,15 +35,22 @@ namespace ChessAndAHalf.Logic
 
             foreach (Position position in positions)
             {
-                Board.GetSquare(position.Row, position.Column).IsHighlighted = true;
+                if (selectedSquare.Occupant.Captures.Contains(position))
+                {
+                    Board.GetSquare(position.Row, position.Column).IsCaptured = true;
+                }
+                else
+                {
+                    Board.GetSquare(position.Row, position.Column).IsHighlighted = true;
+                }
             }
         }
         public void MovePiece(Square selectedSquare)
         {
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
-            Type t = selectedSquare.Occupant.GetType();
-            if (t.Equals(typeof(ChessAndAHalf.Data.Model.Pieces.Knight)))
+            Type type = selectedSquare.Occupant.GetType();
+            if (type.Equals(typeof(ChessAndAHalf.Data.Model.Pieces.Knight)))
             {
                 selectedSquare.Occupant.IsFirstMove = false;
             }
