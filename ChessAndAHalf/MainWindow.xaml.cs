@@ -67,6 +67,9 @@ namespace ChessAndAHalf
                     pieceImage.MouseDown += Image_MouseDown;
                     pieceImage.Tag = $"{row}/{col}";
 
+                    highlightImage.MouseDown += Image_MouseDown;
+                    highlightImage.Tag = $"{row}/{col}";
+
                     Square square = game.Board.GetSquare(row, col);
 
                     Piece piece = square.Occupant;

@@ -20,21 +20,6 @@ namespace ChessAndAHalf.Data.Model
                     squares[row, col] = new Square(row, col);
                 }
             }
-
-            /*  squares[4, 4].Occupant = new Cat(PlayerColor.WHITE);
-              squares[0, 1].Occupant = new StarCat(PlayerColor.WHITE);
-              squares[8, 8].Occupant = new Guard(PlayerColor.BLACK);
-             squares[3, 3].Occupant = new Bishop(PlayerColor.BLACK);
-             squares[5, 4].Occupant = new King(PlayerColor.BLACK);
-             squares[5, 8].Occupant = new Rook(PlayerColor.WHITE);
-             squares[7, 7].Occupant = new Queen(PlayerColor.WHITE);
-             squares[0, 3].Occupant = new StarCat(PlayerColor.BLACK);*/
-            squares[2, 1].Occupant = new Pawn(PlayerColor.BLACK);
-            squares[3, 2].Occupant = new Pawn(PlayerColor.BLACK);
-            squares[4, 3].Occupant = new Pawn(PlayerColor.BLACK);
-            squares[5, 4].Occupant = new EquesRex(PlayerColor.BLACK);
-            squares[6, 5].Occupant = new Knight(PlayerColor.BLACK);
-
             StartPlacement();
         }
 

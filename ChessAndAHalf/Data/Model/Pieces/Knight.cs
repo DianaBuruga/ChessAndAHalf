@@ -4,10 +4,9 @@ namespace ChessAndAHalf.Data.Model.Pieces
 {
     internal class Knight : Piece
     {
-        public bool isFirstMove;
         public Knight(PlayerColor color) : base(color)
         {
-            isFirstMove = true;
+            IsFirstMove = true;
         }
         public override string GetImagePath()
         {
@@ -22,9 +21,9 @@ namespace ChessAndAHalf.Data.Model.Pieces
 
             int[,] directions = new int[,] { { 2, -1 }, { 2, 1 }, { -2, 1 }, { -2, -1 }, { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 } };
             int maxLevel = 1;
-            if (isFirstMove)
+            if (IsFirstMove)
             {
-                maxLevel = 2;// vezi ca dupa prima mutare trebuie sa faci isFirstMove pe false;
+                maxLevel = 2;
             }
             for (int index = 0; index < 8; index++)
             {
