@@ -1,10 +1,5 @@
 ﻿using ChessAndAHalf.Data.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 
 namespace ChessAndAHalf.Logic
 {
@@ -27,7 +22,7 @@ namespace ChessAndAHalf.Logic
 
             if (selectedSquare != null && selectedSquare.Occupant != null)
             {
-                 positions = selectedSquare.Occupant.GetLegalMoves(Board, selectedSquare);
+                positions = selectedSquare.Occupant.GetLegalMoves(Board, selectedSquare);
             }
             else
             {

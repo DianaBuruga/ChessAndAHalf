@@ -1,11 +1,4 @@
 ﻿using ChessAndAHalf.Data.Model.Pieces;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
 
 namespace ChessAndAHalf.Data.Model
 {
@@ -28,20 +21,30 @@ namespace ChessAndAHalf.Data.Model
                 }
             }
 
-            /* squares[4, 4].Occupant = new Cat(PlayerColor.WHITE);
-             squares[0, 1].Occupant = new StarCat(PlayerColor.WHITE);
-             squares[8, 8].Occupant = new Cat(PlayerColor.BLACK);
+            /*  squares[4, 4].Occupant = new Cat(PlayerColor.WHITE);
+              squares[0, 1].Occupant = new StarCat(PlayerColor.WHITE);
+              squares[8, 8].Occupant = new Guard(PlayerColor.BLACK);
+             squares[3, 3].Occupant = new Bishop(PlayerColor.BLACK);
+             squares[5, 4].Occupant = new King(PlayerColor.BLACK);
+             squares[5, 8].Occupant = new Rook(PlayerColor.WHITE);
+             squares[7, 7].Occupant = new Queen(PlayerColor.WHITE);
              squares[0, 3].Occupant = new StarCat(PlayerColor.BLACK);*/
+            squares[2, 1].Occupant = new Pawn(PlayerColor.BLACK);
+            squares[3, 2].Occupant = new Pawn(PlayerColor.BLACK);
+            squares[4, 3].Occupant = new Pawn(PlayerColor.BLACK);
+            squares[5, 4].Occupant = new EquesRex(PlayerColor.BLACK);
+            squares[6, 5].Occupant = new Knight(PlayerColor.BLACK);
+
             StartPlacement();
         }
 
         public void StartPlacement()
         {
-            int column = 0, row =0;
+            int column = 0, row = 0;
             squares[row, column].Occupant = new Rook(PlayerColor.BLACK);
-            squares[row, 11-column].Occupant = new Rook(PlayerColor.BLACK);
-            squares[11,column].Occupant = new Rook(PlayerColor.WHITE);
-            squares[11, 11-column].Occupant = new Rook(PlayerColor.WHITE);
+            squares[row, 11 - column].Occupant = new Rook(PlayerColor.BLACK);
+            squares[11, column].Occupant = new Rook(PlayerColor.WHITE);
+            squares[11, 11 - column].Occupant = new Rook(PlayerColor.WHITE);
             column++;
             squares[row, column].Occupant = new Knight(PlayerColor.BLACK);
             squares[row, 11 - column].Occupant = new Knight(PlayerColor.BLACK);
@@ -68,14 +71,14 @@ namespace ChessAndAHalf.Data.Model
             squares[11, column].Occupant = new Queen(PlayerColor.WHITE);
             squares[11, 11 - column].Occupant = new King(PlayerColor.WHITE);
             row++;
-            for(column = 0; column < 6; column++)
+            for (column = 0; column < 6; column++)
             {
                 if (column == 3)
                 {
                     squares[row, column].Occupant = new Guard(PlayerColor.BLACK);
                     squares[row, 11 - column].Occupant = new Guard(PlayerColor.BLACK);
-                    squares[11-row, column].Occupant = new Guard(PlayerColor.WHITE);
-                    squares[11-row, 11 - column].Occupant = new Guard(PlayerColor.WHITE);
+                    squares[11 - row, column].Occupant = new Guard(PlayerColor.WHITE);
+                    squares[11 - row, 11 - column].Occupant = new Guard(PlayerColor.WHITE);
                 }
                 else
                 {

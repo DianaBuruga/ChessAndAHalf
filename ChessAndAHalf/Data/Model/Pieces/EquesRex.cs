@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ChessAndAHalf.Data.Model.Pieces
 {
@@ -19,8 +15,24 @@ namespace ChessAndAHalf.Data.Model.Pieces
 
         public override List<Position> GetLegalMoves(Board board, Square currentSquare)
         {
+            int currentRow = currentSquare.GetRow();
+            int currentColumn = currentSquare.GetColumn();
             List<Position> legalMoves = new List<Position>();
-            //discutat mutari legale
+
+            int[,] directions = new int[,] { { 2, -1 }, { 2, 1 }, { -2, 1 }, { -2, -1 }, { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 }, { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+
+            int level = 1;
+            for (int index = 0; index < 16; index++)
+            {
+                Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
+
+                if (square != null && square.Occupant == null)
+                {
+                    Position position = square.Position;
+                    legalMoves.Add(position);
+                }
+            }
+
             return legalMoves;
         }
     }

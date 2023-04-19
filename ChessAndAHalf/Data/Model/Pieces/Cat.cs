@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
+﻿using System.Collections.Generic;
 
 namespace ChessAndAHalf.Data.Model.Pieces
 {
@@ -26,9 +21,9 @@ namespace ChessAndAHalf.Data.Model.Pieces
 
             int[,] directions = new int[,] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
 
-            for(int level = 1; level <= 2; level++)
+            for (int level = 1; level <= 2; level++)
             {
-                for(int index = 0; index < 8; index++)
+                for (int index = 0; index < 8; index++)
                 {
                     Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
