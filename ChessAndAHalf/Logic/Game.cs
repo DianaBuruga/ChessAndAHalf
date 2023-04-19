@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace ChessAndAHalf.Logic
 {
@@ -14,6 +15,29 @@ namespace ChessAndAHalf.Logic
         public Game()
         {
             Board = new Board();
+        }
+
+        //Added just to see the functionality
+        public void SelectPiece(int row, int column)
+        {
+            Board.ClearHighlight();
+
+            Square selectedSquare = Board.GetSquare(row, column);
+            List<Position> positions;
+
+            if (selectedSquare != null && selectedSquare.Occupant != null)
+            {
+                 positions = selectedSquare.Occupant.GetLegalMoves(Board, selectedSquare);
+            }
+            else
+            {
+                return;
+            }
+
+            foreach (Position position in positions)
+            {
+                Board.GetSquare(position.Row, position.Column).IsHighlighted = true;
+            }
         }
     }
 }

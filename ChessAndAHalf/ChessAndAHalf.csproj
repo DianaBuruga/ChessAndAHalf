@@ -68,6 +68,7 @@
     <Compile Include="Data\Model\Pieces\Cat.cs" />
     <Compile Include="Data\Model\Pieces\StarCat.cs" />
     <Compile Include="Data\Model\PlayerColor.cs" />
+    <Compile Include="Data\Model\Position.cs" />
     <Compile Include="Data\Model\Square.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -115,6 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Pieces\blackStarcat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\selectedSquare.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

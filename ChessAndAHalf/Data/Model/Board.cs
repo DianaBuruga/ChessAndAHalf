@@ -28,15 +28,29 @@ namespace ChessAndAHalf.Data.Model
                 }
             }
 
-            squares[0, 0].Occupant = new Cat(PlayerColor.WHITE);
+            squares[4, 4].Occupant = new Cat(PlayerColor.WHITE);
             squares[0, 1].Occupant = new StarCat(PlayerColor.WHITE);
-            squares[0, 2].Occupant = new Cat(PlayerColor.BLACK);
+            squares[8, 8].Occupant = new Cat(PlayerColor.BLACK);
             squares[0, 3].Occupant = new StarCat(PlayerColor.BLACK);
         }
 
         public Square GetSquare(int row, int col)
         {
+            if (row < 0 || col < 0 || row > Size - 1 || col > Size - 1)
+                return null;
+
             return squares[row, col];
+        }
+
+        public void ClearHighlight()
+        {
+            for (int row = 0; row < Size; row++)
+            {
+                for (int col = 0; col < Size; col++)
+                {
+                    squares[row, col].IsHighlighted = false;
+                }
+            }
         }
     }
 }

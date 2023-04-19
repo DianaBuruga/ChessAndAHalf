@@ -24,9 +24,12 @@ namespace ChessAndAHalf
     public partial class MainWindow : Window
     {
         const int SquareSize = 50;
+        Game game;
+
         public MainWindow()
         {
             InitializeComponent();
+            game = new Game();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -36,12 +39,11 @@ namespace ChessAndAHalf
 
         private void DrawGameArea()
         {
-            Game game = new Game();
             for (int row = 0; row < game.Board.Size; row++)
             {
                 for (int col = 0; col < game.Board.Size; col++)
                 {
-                    Rectangle square = new Rectangle
+                    Rectangle cell = new Rectangle
                     {
                         Width = SquareSize,
                         Height = SquareSize,
@@ -50,34 +52,52 @@ namespace ChessAndAHalf
                 
                     if ((row + col) % 2 == 0)   
                     {
-                        square.Fill = Brushes.White;
+                        cell.Fill = Brushes.White;
                     }
                     else
                     {
-                        square.Fill = Brushes.Gray;
+                        cell.Fill = Brushes.Gray;
                     }
 
-                    Image image = new Image
+                    Image pieceImage = new Image
                     {
                         Width = SquareSize,
                         Height = SquareSize,
                     };
 
-                    image.MouseDown += Image_MouseDown;
+                    Image highlightImage = new Image
+                    {
+                        Width = SquareSize,
+                        Height = SquareSize,
+                    };
 
-                    Piece piece = game.Board.GetSquare(row, col).Occupant;
+                    pieceImage.MouseDown += Image_MouseDown;
+                    pieceImage.Tag = $"{row}/{col}";
+
+                    Square square = game.Board.GetSquare(row, col);
+
+                    Piece piece = square.Occupant;
+
                     if (piece != null)
                     {
-                        image.Source = new BitmapImage(new Uri(piece.GetImagePath(), UriKind.Relative));
+                        pieceImage.Source = new BitmapImage(new Uri(piece.GetImagePath(), UriKind.Relative));
                     }
 
-                    GameArea.Children.Add(square);
-                    GameArea.Children.Add(image);
+                    if (square.IsHighlighted)
+                    {
+                        highlightImage.Source = new BitmapImage(new Uri("../../Images/selectedSquare.png", UriKind.Relative));
+                    }
 
-                    Canvas.SetTop(square, row * SquareSize);
-                    Canvas.SetLeft(square, col * SquareSize);
-                    Canvas.SetTop(image, row * SquareSize);
-                    Canvas.SetLeft(image, col * SquareSize);
+                    GameArea.Children.Add(cell);
+                    GameArea.Children.Add(pieceImage);
+                    GameArea.Children.Add(highlightImage);
+
+                    Canvas.SetTop(cell, row * SquareSize);
+                    Canvas.SetLeft(cell, col * SquareSize);
+                    Canvas.SetTop(pieceImage, row * SquareSize);
+                    Canvas.SetLeft(pieceImage, col * SquareSize);
+                    Canvas.SetTop(highlightImage, row * SquareSize);
+                    Canvas.SetLeft(highlightImage, col * SquareSize);
                 }
             }
         }
@@ -85,7 +105,12 @@ namespace ChessAndAHalf
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var image = sender as Image;
-            image.Source = new BitmapImage(new Uri("../../Images/Pieces/whiteStarcat.png", UriKind.Relative));
+            string tag = image.Tag.ToString();
+            string[] rowCol = tag.Split('/');
+            int row = Int32.Parse(rowCol[0]);
+            int col = Int32.Parse(rowCol[1]);
+            game.SelectPiece(row, col);
+            DrawGameArea();
         }
     }
 }
