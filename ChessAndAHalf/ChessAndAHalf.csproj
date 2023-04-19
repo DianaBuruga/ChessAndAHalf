@@ -71,10 +71,10 @@
     <Compile Include="Data\Model\Pieces\Queen.cs" />
     <Compile Include="Data\Model\Pieces\Rook.cs" />
     <Compile Include="Data\Model\Pieces\SpeedyKnight.cs" />
-	  <Compile Include="Data\Model\Pieces\Bishop.cs" />
-	  <Compile Include="Data\Model\Pieces\EquesRex.cs" />
-	  <Compile Include="Data\Model\Pieces\Guard.cs" />
-	  <Compile Include="Data\Model\Pieces\King.cs" />  
+    <Compile Include="Data\Model\Pieces\Bishop.cs" />
+    <Compile Include="Data\Model\Pieces\EquesRex.cs" />
+    <Compile Include="Data\Model\Pieces\Guard.cs" />
+    <Compile Include="Data\Model\Pieces\King.cs" />
     <Compile Include="Data\Model\Pieces\StarCat.cs" />
     <Compile Include="Data\Model\PlayerColor.cs" />
     <Compile Include="Data\Model\Position.cs" />
@@ -128,6 +128,26 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\selectedSquare.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Pieces\blackBishop.png" />
+    <Resource Include="Images\Pieces\blackEquesRex.png" />
+    <Resource Include="Images\Pieces\blackGuard.png" />
+    <Resource Include="Images\Pieces\blackKing.png" />
+    <Resource Include="Images\Pieces\blackKnight.png" />
+    <Resource Include="Images\Pieces\blackPawn.png" />
+    <Resource Include="Images\Pieces\blackQueen.png" />
+    <Resource Include="Images\Pieces\blackRook.png" />
+    <Resource Include="Images\Pieces\blackSpeedyKnight.png" />
+    <Resource Include="Images\Pieces\whiteBishop.png" />
+    <Resource Include="Images\Pieces\whiteEquesRex.png" />
+    <Resource Include="Images\Pieces\whiteGuard.png" />
+    <Resource Include="Images\Pieces\whiteKing.png" />
+    <Resource Include="Images\Pieces\whiteKnight.png" />
+    <Resource Include="Images\Pieces\whitePawn.png" />
+    <Resource Include="Images\Pieces\whiteQueen.png" />
+    <Resource Include="Images\Pieces\whiteRook.png" />
+    <Resource Include="Images\Pieces\whiteSpeedyKnight.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
