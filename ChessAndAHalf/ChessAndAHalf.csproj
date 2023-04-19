@@ -66,6 +66,11 @@
     <Compile Include="Data\Model\Board.cs" />
     <Compile Include="Data\Model\Piece.cs" />
     <Compile Include="Data\Model\Pieces\Cat.cs" />
+    <Compile Include="Data\Model\Pieces\Knight.cs" />
+    <Compile Include="Data\Model\Pieces\Pawn.cs" />
+    <Compile Include="Data\Model\Pieces\Queen.cs" />
+    <Compile Include="Data\Model\Pieces\Rook.cs" />
+    <Compile Include="Data\Model\Pieces\SpeedyKnight.cs" />
     <Compile Include="Data\Model\Pieces\StarCat.cs" />
     <Compile Include="Data\Model\PlayerColor.cs" />
     <Compile Include="Data\Model\Position.cs" />
