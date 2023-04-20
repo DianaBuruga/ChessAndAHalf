@@ -41,15 +41,6 @@ namespace ChessAndAHalf.Data.Model.Pieces
                     {
                         legalMoves.Add(position);
                     }
-                   /* else if (square.Occupant != null)
-                    {
-                        if (square.Occupant.Color != Color)
-                        {
-                            legalMoves.Add(position);
-                            captures.Add(position);
-                        }
-                        break;
-                    }*/
                 }
             }
             level = 1;
@@ -66,9 +57,9 @@ namespace ChessAndAHalf.Data.Model.Pieces
                     }
                 }
             }
-            /*if (EnPassantLeft)
+            if (EnPassantLeft)
             {
-                int level = 1;
+                level = 1;
                 index = 1;
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
@@ -76,11 +67,12 @@ namespace ChessAndAHalf.Data.Model.Pieces
                 {
                     Position position = square.Position;
                     legalMoves.Add(position);
+                    captures.Add(position);
                 }
             }
             if (EnPassantRight)
             {
-                int level = 1;
+                level = 1;
                 index = 2;
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
@@ -88,8 +80,9 @@ namespace ChessAndAHalf.Data.Model.Pieces
                 {
                     Position position = square.Position;
                     legalMoves.Add(position);
+                    captures.Add(position);
                 }
-            }*/
+            }
             Captures = captures;
             return legalMoves;
         }

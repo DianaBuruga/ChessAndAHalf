@@ -10,10 +10,15 @@ namespace ChessAndAHalf.Logic
         public Board Board { get; private set; }
         public Square SelectedPiece { get; private set; }
         private PlayerColor currentPlayer;
+        private List<Pawn> enPassant = new List<Pawn>();
+        private Square triggerEnPassant;
+        private bool isEnPassant;
+        
         public Game()
         {
             Board = new Board();
             SelectedPiece = null;
+            triggerEnPassant = null;
             currentPlayer = PlayerColor.WHITE;
         }
         
@@ -21,13 +26,34 @@ namespace ChessAndAHalf.Logic
         //Added just to see the functionality
         public void SelectPiece(int row, int column, bool red)
         {
+            Square selectedSquare = Board.GetSquare(row, column);
+            bool isHighlighted = selectedSquare.IsHighlighted;
             Board.ClearHighlight();
             Board.ClearCaptures();
-            Square selectedSquare = Board.GetSquare(row, column);
+            
             if(VerifyIfIsMyTurn(selectedSquare, red))
             {
+                if(triggerEnPassant!=null && triggerEnPassant.Occupant!=null 
+                    && triggerEnPassant.Occupant.Color == currentPlayer)
+                {
+                    if (isEnPassant)
+                    {
+                        isEnPassant = false;
+                        foreach (Pawn pawn in enPassant)
+                        {
+                            pawn.EnPassantLeft = false;
+                            pawn.EnPassantRight = false;
+                        }
+                        enPassant.Clear();
+                    }
+                  
+                }
                 if (red)
                 {
+                    if (isHighlighted)
+                    {
+                        triggerEnPassant.Occupant = null;
+                    }
                     CapturePiece(selectedSquare);
                     ChangeTurn();
                     return;
@@ -52,6 +78,10 @@ namespace ChessAndAHalf.Logic
                     if (selectedSquare.Occupant.Captures.Contains(position))
                     {
                         Board.GetSquare(position.Row, position.Column).IsCaptured = true;
+                        if (triggerEnPassant != null && Board.GetSquare(position.Row, position.Column).Occupant == null)
+                        {
+                            Board.GetSquare(position.Row, position.Column).IsHighlighted = true;
+                        }
                     }
                     else
                     {
@@ -63,6 +93,7 @@ namespace ChessAndAHalf.Logic
         }
         public void MovePiece(Square selectedSquare)
         {
+            VerifyEnPassant(selectedSquare);
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
             Type type = selectedSquare.Occupant.GetType();
@@ -71,12 +102,16 @@ namespace ChessAndAHalf.Logic
                 selectedSquare.Occupant.IsFirstMove = false;
             }
             VerifyPromotion(selectedSquare);
-
+            
         }
 
         public void CapturePiece(Square selectedSquare)
         {
             Board.ClearCaptures();
+            if (selectedSquare.Equals(triggerEnPassant))
+            {
+
+            }
          
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
@@ -153,6 +188,40 @@ namespace ChessAndAHalf.Logic
             {
                 currentPlayer = PlayerColor.WHITE;
             }
+        }
+
+        public void VerifyEnPassant(Square selectedSquare)
+        {
+            Type type = SelectedPiece.Occupant.GetType();
+            Pawn pawn;
+            Piece piece;
+            if (type.Equals(typeof(Pawn)))
+            {
+                if ((Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow()) == 2))
+                {
+                    piece = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() + 1).Occupant;
+                    if (piece != null && piece.GetType().Equals(typeof(Pawn)))
+                    {
+                        isEnPassant = true;
+                        pawn = (Pawn)piece;
+                        pawn.EnPassantLeft = true;
+                        enPassant.Add(pawn);
+                        triggerEnPassant = selectedSquare;
+                    }
+                    piece = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() - 1).Occupant;
+                    if (piece != null && piece.GetType().Equals(typeof(Pawn)))
+                    {
+                        isEnPassant = true;
+                        pawn = (Pawn)piece;
+                        pawn.EnPassantRight = true;
+                        enPassant.Add(pawn);
+                        triggerEnPassant = selectedSquare;
+                    }
+
+                }
+                
+            }
+
         }
     }
 }
