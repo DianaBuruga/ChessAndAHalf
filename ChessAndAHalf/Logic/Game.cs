@@ -10,6 +10,7 @@ namespace ChessAndAHalf.Logic
         public Board Board { get; private set; }
         public Square SelectedPiece { get; private set; }
         private PlayerColor currentPlayer;
+
         private List<Pawn> enPassant = new List<Pawn>();
         private Square triggerEnPassant;
         private bool isEnPassant;
@@ -33,26 +34,13 @@ namespace ChessAndAHalf.Logic
             
             if(VerifyIfIsMyTurn(selectedSquare, red))
             {
-                if(triggerEnPassant!=null && triggerEnPassant.Occupant!=null 
-                    && triggerEnPassant.Occupant.Color == currentPlayer)
-                {
-                    if (isEnPassant)
-                    {
-                        isEnPassant = false;
-                        foreach (Pawn pawn in enPassant)
-                        {
-                            pawn.EnPassantLeft = false;
-                            pawn.EnPassantRight = false;
-                        }
-                        enPassant.Clear();
-                    }
-                  
-                }
+                ClearEnPassant();
+
                 if (red)
                 {
                     if (isHighlighted)
                     {
-                        triggerEnPassant.Occupant = null;
+                        triggerEnPassant.Occupant = null;   //captura piesa en passant
                     }
                     CapturePiece(selectedSquare);
                     ChangeTurn();
@@ -108,11 +96,7 @@ namespace ChessAndAHalf.Logic
         public void CapturePiece(Square selectedSquare)
         {
             Board.ClearCaptures();
-            if (selectedSquare.Equals(triggerEnPassant))
-            {
-
-            }
-         
+                     
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
             VerifyPromotion(selectedSquare);
@@ -220,6 +204,25 @@ namespace ChessAndAHalf.Logic
 
                 }
                 
+            }
+
+        }
+
+        public void ClearEnPassant()
+        {
+            if (triggerEnPassant != null && triggerEnPassant.Occupant != null
+                    && triggerEnPassant.Occupant.Color == currentPlayer)
+            {
+                if (isEnPassant)
+                {
+                    isEnPassant = false;
+                    foreach (Pawn pawn in enPassant)
+                    {
+                        pawn.EnPassantLeft = false;
+                        pawn.EnPassantRight = false;
+                    }
+                    enPassant.Clear();
+                }
             }
 
         }

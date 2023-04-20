@@ -30,7 +30,7 @@ namespace ChessAndAHalf.Data.Model.Pieces
             int index = 0, level;
             maxLevel = isInFirstHalf(currentRow);
 
-            for (level = 1; level <= maxLevel; level++)
+            for (level = 1; level <= maxLevel; level++) 
             {
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
@@ -59,7 +59,6 @@ namespace ChessAndAHalf.Data.Model.Pieces
             }
             if (EnPassantLeft)
             {
-                level = 1;
                 index = 1;
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
@@ -72,7 +71,6 @@ namespace ChessAndAHalf.Data.Model.Pieces
             }
             if (EnPassantRight)
             {
-                level = 1;
                 index = 2;
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 
