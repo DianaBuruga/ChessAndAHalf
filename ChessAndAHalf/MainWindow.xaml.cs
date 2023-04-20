@@ -32,16 +32,21 @@ namespace ChessAndAHalf
 
         private void DrawGameArea()
         {
+            bool red;
             for (int row = 0; row < game.Board.Size; row++)
             {
                 for (int col = 0; col < game.Board.Size; col++)
                 {
+                    red = false;
                     Rectangle cell = new Rectangle
                     {
                         Width = SquareSize,
                         Height = SquareSize,
                         Stroke = Brushes.Black,
                     };
+
+                    Square square = game.Board.GetSquare(row, col);
+                    Piece piece = square.Occupant;
 
                     if ((row + col) % 2 == 0)
                     {
@@ -50,6 +55,11 @@ namespace ChessAndAHalf
                     else
                     {
                         cell.Fill = Brushes.Gray;
+                    }
+                    if (square.IsCaptured)
+                    {
+                        cell.Fill = Brushes.Red;
+                        red = true;
                     }
 
                     Image pieceImage = new Image
@@ -65,15 +75,12 @@ namespace ChessAndAHalf
                     };
 
                     pieceImage.MouseDown += Image_MouseDown;
-                    pieceImage.Tag = $"{row}/{col}";
+                    pieceImage.Tag = $"{row}/{col}/{red}";
 
                     highlightImage.MouseDown += Image_MouseDown;
-                    highlightImage.Tag = $"{row}/{col}";
+                    highlightImage.Tag = $"{row}/{col}/{red}";
 
-                    Square square = game.Board.GetSquare(row, col);
-
-                    Piece piece = square.Occupant;
-
+                    
                     if (piece != null)
                     {
                         pieceImage.Source = new BitmapImage(new Uri(piece.GetImagePath(), UriKind.Relative));
@@ -82,10 +89,6 @@ namespace ChessAndAHalf
                     if (square.IsHighlighted)
                     {
                         highlightImage.Source = new BitmapImage(new Uri("../../Images/selectedSquare.png", UriKind.Relative));
-                    }
-                    if (square.IsCaptured)
-                    {
-                        cell.Fill = Brushes.Red;
                     }
 
                     GameArea.Children.Add(cell);
@@ -106,11 +109,13 @@ namespace ChessAndAHalf
         {
             var image = sender as Image;
             string tag = image.Tag.ToString();
-            string[] rowCol = tag.Split('/');
-            int row = Int32.Parse(rowCol[0]);
-            int col = Int32.Parse(rowCol[1]);
-            game.SelectPiece(row, col);
+            string[] rowColRed = tag.Split('/');
+            int row = Int32.Parse(rowColRed[0]);
+            int col = Int32.Parse(rowColRed[1]);
+            bool red = Boolean.Parse(rowColRed[2]);
+            game.SelectPiece(row, col, red);
             DrawGameArea();
         }
+
     }
 }

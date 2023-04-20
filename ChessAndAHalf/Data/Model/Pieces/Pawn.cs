@@ -56,7 +56,7 @@ namespace ChessAndAHalf.Data.Model.Pieces
             for (index = 1; index <= 2; index++)
             {
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
-                if (square.Occupant != null)
+                if (square != null && square.Occupant != null)
                 {
                     Position position = square.Position;
                     if (square.Occupant.Color != Color)

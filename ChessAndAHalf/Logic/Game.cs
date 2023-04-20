@@ -14,12 +14,17 @@ namespace ChessAndAHalf.Logic
         }
 
         //Added just to see the functionality
-        public void SelectPiece(int row, int column)
+        public void SelectPiece(int row, int column, bool red)
         {
             Board.ClearHighlight();
             Board.ClearCaptures();
-
             Square selectedSquare = Board.GetSquare(row, column);
+            if (red)
+            {
+                CapturePiece(selectedSquare);
+                return;
+            }
+            
             List<Position> positions;
 
             if (selectedSquare != null && selectedSquare.Occupant != null)
@@ -54,6 +59,14 @@ namespace ChessAndAHalf.Logic
             {
                 selectedSquare.Occupant.IsFirstMove = false;
             }
+        }
+
+        public void CapturePiece(Square selectedSquare)
+        {
+            Board.ClearCaptures();
+         
+            selectedSquare.Occupant = SelectedPiece.Occupant;
+            SelectedPiece.Occupant = null;   
         }
     }
 }
