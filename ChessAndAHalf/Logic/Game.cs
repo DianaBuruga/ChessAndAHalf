@@ -9,10 +9,14 @@ namespace ChessAndAHalf.Logic
     {
         public Board Board { get; private set; }
         public Square SelectedPiece { get; private set; }
+        private PlayerColor currentPlayer;
         public Game()
         {
             Board = new Board();
+            SelectedPiece = null;
+            currentPlayer = PlayerColor.WHITE;
         }
+        
 
         //Added just to see the functionality
         public void SelectPiece(int row, int column, bool red)
@@ -20,36 +24,42 @@ namespace ChessAndAHalf.Logic
             Board.ClearHighlight();
             Board.ClearCaptures();
             Square selectedSquare = Board.GetSquare(row, column);
-            if (red)
+            if(VerifyIfIsMyTurn(selectedSquare, red))
             {
-                CapturePiece(selectedSquare);
-                return;
-            }
-            
-            List<Position> positions;
-
-            if (selectedSquare != null && selectedSquare.Occupant != null)
-            {
-                SelectedPiece = selectedSquare;
-                positions = selectedSquare.Occupant.GetLegalMoves(Board, selectedSquare);
-            }
-            else
-            {
-                MovePiece(selectedSquare);
-                return;
-            }
-
-            foreach (Position position in positions)
-            {
-                if (selectedSquare.Occupant.Captures.Contains(position))
+                if (red)
                 {
-                    Board.GetSquare(position.Row, position.Column).IsCaptured = true;
+                    CapturePiece(selectedSquare);
+                    ChangeTurn();
+                    return;
+                }
+
+                List<Position> positions;
+
+                if (selectedSquare != null && selectedSquare.Occupant != null)
+                {
+                    SelectedPiece = selectedSquare;
+                    positions = selectedSquare.Occupant.GetLegalMoves(Board, selectedSquare);
                 }
                 else
                 {
-                    Board.GetSquare(position.Row, position.Column).IsHighlighted = true;
+                    MovePiece(selectedSquare);
+                    ChangeTurn();
+                    return;
+                }
+
+                foreach (Position position in positions)
+                {
+                    if (selectedSquare.Occupant.Captures.Contains(position))
+                    {
+                        Board.GetSquare(position.Row, position.Column).IsCaptured = true;
+                    }
+                    else
+                    {
+                        Board.GetSquare(position.Row, position.Column).IsHighlighted = true;
+                    }
                 }
             }
+    
         }
         public void MovePiece(Square selectedSquare)
         {
@@ -61,6 +71,7 @@ namespace ChessAndAHalf.Logic
                 selectedSquare.Occupant.IsFirstMove = false;
             }
             VerifyPromotion(selectedSquare);
+
         }
 
         public void CapturePiece(Square selectedSquare)
@@ -108,6 +119,40 @@ namespace ChessAndAHalf.Logic
                 //selectedSquare.Occupant = new Alegere(selectedSquare.Occupant.Color);
             }
 
+        }
+
+        public bool VerifyIfIsMyTurn(Square selectedSquare, bool red)
+        {
+            return VerifyIfISelectMyPiece(selectedSquare) || VerifyIfIMoveMyPiece(selectedSquare) 
+                || VerifyIfICapturePiece(red); 
+        }
+        public bool VerifyIfISelectMyPiece(Square selectedSquare)
+        {
+            return selectedSquare != null && selectedSquare.Occupant != null &&
+                selectedSquare.Occupant.Color == currentPlayer;
+        }
+
+        public bool VerifyIfIMoveMyPiece(Square selectedSquare)
+        {
+            return selectedSquare != null && selectedSquare.Occupant == null &&
+                SelectedPiece.Occupant.Color == currentPlayer;
+        }
+        public bool VerifyIfICapturePiece(bool red)
+        {
+            return red && SelectedPiece != null && SelectedPiece.Occupant != null
+                && SelectedPiece.Occupant.Color == currentPlayer;
+        }
+
+        public void ChangeTurn()
+        {
+            if(currentPlayer == PlayerColor.WHITE)
+            {
+                currentPlayer = PlayerColor.BLACK;
+            }
+            else
+            {
+                currentPlayer = PlayerColor.WHITE;
+            }
         }
     }
 }
