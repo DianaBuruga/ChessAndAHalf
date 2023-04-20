@@ -1,6 +1,7 @@
 ﻿using ChessAndAHalf.Data.Model;
 using System;
 using System.Collections.Generic;
+using ChessAndAHalf.Data.Model.Pieces;
 
 namespace ChessAndAHalf.Logic
 {
@@ -55,10 +56,11 @@ namespace ChessAndAHalf.Logic
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
             Type type = selectedSquare.Occupant.GetType();
-            if (type.Equals(typeof(ChessAndAHalf.Data.Model.Pieces.Knight)))
+            if (type.Equals(typeof(Knight)))
             {
                 selectedSquare.Occupant.IsFirstMove = false;
             }
+            VerifyPromotion(selectedSquare);
         }
 
         public void CapturePiece(Square selectedSquare)
@@ -66,7 +68,46 @@ namespace ChessAndAHalf.Logic
             Board.ClearCaptures();
          
             selectedSquare.Occupant = SelectedPiece.Occupant;
-            SelectedPiece.Occupant = null;   
+            SelectedPiece.Occupant = null;
+            VerifyPromotion(selectedSquare);
+        }
+
+        public void VerifyPromotion(Square selectedSquare)
+        {
+            if (selectedSquare.Occupant.Color == PlayerColor.WHITE)
+            {
+                if(selectedSquare.GetRow() == 0)
+                {
+                    Promotion(selectedSquare);
+                }
+            }
+            else
+            {
+                if(selectedSquare.GetRow() == 11)
+                {
+                    Promotion(selectedSquare);
+                }
+            }
+        }
+
+        public void Promotion (Square selectedSquare)
+        {
+            Type type = selectedSquare.Occupant.GetType();
+            if (type.Equals(typeof(Knight)))
+            {
+                selectedSquare.Occupant = new SpeedyKnight(selectedSquare.Occupant.Color);
+            }
+            if (type.Equals(typeof(Guard)))
+            {
+                selectedSquare.Occupant = new EquesRex(selectedSquare.Occupant.Color);
+            }
+            if (type.Equals(typeof(Pawn)))
+            {
+                //fereastra noua cu alegeri
+                //pion promoveaza in Queen, Rook, Bishop, Knight, Cat or Guard 
+                //selectedSquare.Occupant = new Alegere(selectedSquare.Occupant.Color);
+            }
+
         }
     }
 }
