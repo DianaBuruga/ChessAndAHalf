@@ -22,10 +22,9 @@ namespace ChessAndAHalf.Data.Model.Pieces
 
             int[,] directions = new int[,] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
 
-            int level = 1;
             for (int index = 0; index < 8; index++)
             {
-                Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
+                Square square = board.GetSquare(currentRow + directions[index, 0], currentColumn + directions[index, 1]);
 
                 if (square != null)
                 {

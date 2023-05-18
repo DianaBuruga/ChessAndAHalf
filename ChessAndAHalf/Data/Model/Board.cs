@@ -1,11 +1,15 @@
 ﻿using ChessAndAHalf.Data.Model.Pieces;
+using System;
+using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace ChessAndAHalf.Data.Model
 {
     public class Board
     {
         private Square[,] squares;
-        public int Size { get; }
+        public int Size { get; set; }
 
         public Board()
         {
@@ -102,6 +106,69 @@ namespace ChessAndAHalf.Data.Model
                     squares[row, col].IsCaptured = false;
                 }
             }
+        }
+
+        public Position GetKingPosition(PlayerColor playerColor)
+        {
+            foreach (Square square in squares)
+            {
+                if (square.Occupant is King && square.Occupant.Color == playerColor)
+                {
+                    Position position = square.Position;
+                    return position;
+                }
+            }
+            return null;
+        }
+
+        public List<Square> GetSquaresWithPiece(PlayerColor playerColor)
+        {
+            List<Square> pieceSquares = new List<Square>();
+
+            foreach (Square square in squares)
+            {
+                if (square.Occupant != null && square.Occupant.Color == playerColor)
+                {
+                    pieceSquares.Add(square);
+                }
+            }
+
+            return pieceSquares;
+        }
+
+        public void RemovePiece(Position position)
+        {
+            squares[position.Row, position.Column].Occupant = null;
+        }
+
+        public void AddPiece(Position position, Piece piece)
+        {
+            squares[position.Row, position.Column].Occupant = piece;
+        }
+
+        public Board CloneBoard()
+        {
+            Board clonedboard = new Board
+            {
+                Size = Size
+            };
+
+            foreach (Square square in squares)
+            {
+                if (square.Occupant == null)
+                {
+                    Square clonedSquare = new Square(square.GetRow(), square.GetColumn());
+                    clonedboard.squares[square.GetRow(), square.GetColumn()] = clonedSquare;
+                }
+                else
+                {
+                    Type originalType = square.Occupant.GetType();
+                    Square clonedSquare = new Square(square.GetRow(), square.GetColumn(), (Piece)Activator.CreateInstance(originalType, square.Occupant.Color));
+                    clonedboard.squares[square.GetRow(), square.GetColumn()] = clonedSquare;
+                }
+            }
+
+            return clonedboard;
         }
     }
 }

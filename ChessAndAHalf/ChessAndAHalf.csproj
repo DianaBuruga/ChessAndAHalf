@@ -79,6 +79,7 @@
     <Compile Include="Data\Model\PlayerColor.cs" />
     <Compile Include="Data\Model\Position.cs" />
     <Compile Include="Data\Model\Square.cs" />
+    <Compile Include="Logic\Engine\CheckDetector.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -117,9 +118,7 @@
   <ItemGroup>
     <Resource Include="Images\Pieces\whiteStarcat.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Logic\Engine\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\Pieces\blackCat.png" />
   </ItemGroup>

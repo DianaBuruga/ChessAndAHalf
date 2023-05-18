@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using ChessAndAHalf.Data.Model.Pieces;
+using ChessAndAHalf.Logic.Engine;
+using System.Windows.Documents;
 
 namespace ChessAndAHalf.Logic
 {
@@ -53,6 +55,7 @@ namespace ChessAndAHalf.Logic
                 {
                     SelectedPiece = selectedSquare;
                     positions = selectedSquare.Occupant.GetLegalMoves(Board, selectedSquare);
+                    positions = CheckDetector.FilterPositionsByCheck(positions, selectedSquare, Board);
                 }
                 else
                 {
@@ -164,6 +167,11 @@ namespace ChessAndAHalf.Logic
 
         public void ChangeTurn()
         {
+            if (CheckDetector.IsCheckMate(Board, currentPlayer) == true)
+            {
+                return;
+            }
+
             if(currentPlayer == PlayerColor.WHITE)
             {
                 currentPlayer = PlayerColor.BLACK;
