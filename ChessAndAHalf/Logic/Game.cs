@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using ChessAndAHalf.Data.Model.Pieces;
 using ChessAndAHalf.Logic.Engine;
-using System.Windows.Documents;
+using System.Net.Sockets;
 
 namespace ChessAndAHalf.Logic
 {
@@ -11,12 +11,11 @@ namespace ChessAndAHalf.Logic
     {
         public Board Board { get; private set; }
         public Square SelectedPiece { get; private set; }
-        private PlayerColor currentPlayer;
-
+        public PlayerColor currentPlayer { get; set; }
         private List<Pawn> enPassant = new List<Pawn>();
         private Square triggerEnPassant;
         private bool isEnPassant;
-        
+        public string message { get; set; }
         public Game()
         {
             Board = new Board();
@@ -24,7 +23,21 @@ namespace ChessAndAHalf.Logic
             triggerEnPassant = null;
             currentPlayer = PlayerColor.WHITE;
         }
-        
+
+        static bool IsPortInUse(int port)
+        {
+            try
+            {
+                TcpListener listener = new TcpListener(System.Net.IPAddress.Any, port);
+                listener.Start();
+                listener.Stop();
+                return false;
+            }
+            catch (SocketException)
+            {
+                return true;
+            }
+        }
 
         //Added just to see the functionality
         public void SelectPiece(int row, int column, bool red)
@@ -33,11 +46,11 @@ namespace ChessAndAHalf.Logic
             bool isHighlighted = selectedSquare.IsHighlighted;
             Board.ClearHighlight();
             Board.ClearCaptures();
-            
-            if(VerifyIfIsMyTurn(selectedSquare, red))
-            {
-                ClearEnPassant();
 
+            if (VerifyIfIsMyTurn(selectedSquare, red))
+            {
+                message += $"{row}#{column}#{red}";
+                ClearEnPassant();
                 if (red)
                 {
                     if (isHighlighted)
@@ -66,6 +79,7 @@ namespace ChessAndAHalf.Logic
 
                 foreach (Position position in positions)
                 {
+                    message = $"{row}#{column}#{red}/";
                     if (selectedSquare.Occupant.Captures.Contains(position))
                     {
                         Board.GetSquare(position.Row, position.Column).IsCaptured = true;
@@ -80,7 +94,6 @@ namespace ChessAndAHalf.Logic
                     }
                 }
             }
-    
         }
         public void MovePiece(Square selectedSquare)
         {
@@ -209,11 +222,8 @@ namespace ChessAndAHalf.Logic
                         enPassant.Add(pawn);
                         triggerEnPassant = selectedSquare;
                     }
-
-                }
-                
+                }   
             }
-
         }
 
         public void ClearEnPassant()
@@ -232,7 +242,6 @@ namespace ChessAndAHalf.Logic
                     enPassant.Clear();
                 }
             }
-
         }
     }
 }

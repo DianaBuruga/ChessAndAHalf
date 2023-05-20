@@ -63,6 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Client.cs" />
     <Compile Include="Data\Model\Board.cs" />
     <Compile Include="Data\Model\Piece.cs" />
     <Compile Include="Data\Model\Pieces\Cat.cs" />
@@ -118,7 +119,6 @@
   <ItemGroup>
     <Resource Include="Images\Pieces\whiteStarcat.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\Pieces\blackCat.png" />
   </ItemGroup>
