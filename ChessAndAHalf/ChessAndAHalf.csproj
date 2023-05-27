@@ -55,6 +55,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Difficulty.xaml.cs">
+      <DependentUpon>Difficulty.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StartPage.xaml.cs">
+      <DependentUpon>StartPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Difficulty.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -86,6 +96,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="StartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -147,6 +161,18 @@
     <Resource Include="Images\Pieces\whiteQueen.png" />
     <Resource Include="Images\Pieces\whiteRook.png" />
     <Resource Include="Images\Pieces\whiteSpeedyKnight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\chess.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\chesshd.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\chess.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

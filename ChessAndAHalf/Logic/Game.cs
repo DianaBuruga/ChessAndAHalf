@@ -200,29 +200,37 @@ namespace ChessAndAHalf.Logic
             Type type = SelectedPiece.Occupant.GetType();
             Pawn pawn;
             Piece piece;
+            Square square;
             if (type.Equals(typeof(Pawn)))
             {
-                if ((Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow()) == 2))
+                if (Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow()) <=4 && Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow())>1)
                 {
-                    piece = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() + 1).Occupant;
-                    if (piece != null && piece.GetType().Equals(typeof(Pawn)))
-                    {
-                        isEnPassant = true;
-                        pawn = (Pawn)piece;
-                        pawn.EnPassantLeft = true;
-                        enPassant.Add(pawn);
-                        triggerEnPassant = selectedSquare;
+                    square = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() + 1);
+                    if (square != null) { 
+                        piece=square.Occupant;
+                        if (piece != null && piece.GetType().Equals(typeof(Pawn)))
+                        {
+                            isEnPassant = true;
+                            pawn = (Pawn)piece;
+                            pawn.EnPassantLeft = true;
+                            enPassant.Add(pawn);
+                            triggerEnPassant = selectedSquare;
+                        }
                     }
-                    piece = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() - 1).Occupant;
-                    if (piece != null && piece.GetType().Equals(typeof(Pawn)))
+                    square = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() - 1);
+                    if (square != null)
                     {
-                        isEnPassant = true;
-                        pawn = (Pawn)piece;
-                        pawn.EnPassantRight = true;
-                        enPassant.Add(pawn);
-                        triggerEnPassant = selectedSquare;
+                        piece = square.Occupant;
+                        if (piece != null && piece.GetType().Equals(typeof(Pawn)))
+                        {
+                            isEnPassant = true;
+                            pawn = (Pawn)piece;
+                            pawn.EnPassantRight = true;
+                            enPassant.Add(pawn);
+                            triggerEnPassant = selectedSquare;
+                        }
                     }
-                }   
+                }
             }
         }
 

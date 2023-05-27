@@ -41,6 +41,10 @@ namespace ChessAndAHalf.Data.Model.Pieces
                     {
                         legalMoves.Add(position);
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
             level = 1;

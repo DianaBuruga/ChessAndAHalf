@@ -84,9 +84,10 @@ namespace ChessAndAHalf
                 case "#Gata":
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        game.PrintMessage("Connection Lost!");
+                        game.PrintMessage("Connection Lost! You win");
                     }));
-                    Disconnect();
+                    ascult = false;
+                    t.Abort();
                     break;
                 default:
                     var completedMoves = message.Split('/');
@@ -113,10 +114,6 @@ namespace ChessAndAHalf
             writer = new StreamWriter(stream);
             writer.AutoFlush = true;
             writer.WriteLine("#Gata");
-            reader.Close();
-            writer.Close();
-            stream.Close();
-            client.Close();
             ascult = false;
             t.Abort();
         }

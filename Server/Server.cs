@@ -11,7 +11,8 @@ namespace Server
     internal class Server
     {
         private TcpListener server;
-        private bool isRunning;
+        private bool isRunning1;
+        private bool isRunning2;
         private TcpClient client1;
         private TcpClient client2;
         private NetworkStream stream1;
@@ -20,11 +21,12 @@ namespace Server
         public Server()
         {
             server = new TcpListener(IPAddress.Any, 3000);
-            isRunning = true;
-            client1 = null;
+            isRunning1 = true;
+            isRunning2 = true;
+            /*client1 = null;
             client2 = null;
             stream1 = null;
-            stream2 = null;
+            stream2 = null;*/
         }
 
         public void Start()
@@ -55,21 +57,29 @@ namespace Server
             writer.WriteLine("BLACK");
             writer.Flush();
 
-            while (isRunning)
+            while (isRunning1)
             {
-                string message = reader.ReadLine();
+                string? message = reader.ReadLine();
                 if (message == null) break;
-
+                if (message == "#Gata")
+                {
+                    Console.WriteLine("Client 1 disconnected.");
+                    client1.Close();
+                    stream1.Close();
+                    isRunning1 = false;
+                }
+                if (isRunning2 == false)
+                {
+                    Cleanup();
+                    break;
+                }
                 Console.WriteLine("Client 1: " + message);
 
                 // Forward message to client 2
                 writer.WriteLine(message);
                 writer.Flush();
+
             }
-            writer.WriteLine("#Gata");
-            writer.Flush();
-            Console.WriteLine("Client 1 disconnected.");
-            Cleanup();
         }
 
         private void HandleClient2()
@@ -79,32 +89,36 @@ namespace Server
             writer.AutoFlush = true;
             writer.WriteLine("WHITE");
             writer.Flush();
-            while (isRunning)
+            while (isRunning2)
             {
-                string message = reader.ReadLine();
+                string? message = reader.ReadLine();
                 if (message == null) break;
+                if (message == "#Gata")
+                {
+                    Console.WriteLine("Client 2 disconnected.");
+                    client2.Close();
+                    stream2.Close();
+                    isRunning2 = false;
+                }
+                if (isRunning1==false)
+                {
+                    Cleanup();
+                    break;
+                }
 
                 Console.WriteLine("Client 2: " + message);
 
                 // Forward message to client 1
                 writer.WriteLine(message);
                 writer.Flush();
+
             }
-            writer.WriteLine("#Gata");
-            writer.Flush();
-            Console.WriteLine("Client 2 disconnected.");
-            Cleanup();
         }
 
         private void Cleanup()
         {
-            stream1.Close();
-            stream2.Close();
-            client1.Close();
-            client2.Close();
             Console.WriteLine("Finished Connection!");
             server.Stop();
-            isRunning = false;
         }
     }
 }

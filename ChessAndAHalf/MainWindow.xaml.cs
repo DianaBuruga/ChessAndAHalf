@@ -1,8 +1,6 @@
 ﻿using ChessAndAHalf.Data.Model;
 using ChessAndAHalf.Logic;
 using System;
-using System.Data.Common;
-using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,21 +16,28 @@ namespace ChessAndAHalf
     /// </summary>
     public partial class MainWindow : Window
     {
+        string gameMode;
+        int difficulty;
         const int SquareSize = 50;
         Client client;
         Game game;
         public PlayerColor MyColor { get; set; }
-        public MainWindow()
+        public MainWindow(string gameMode, int difficulty=0)
         {
             InitializeComponent();
             game = new Game();
-            try
+            this.gameMode = gameMode;
+            this.difficulty = difficulty;
+            if (gameMode == "Multiplayer")
             {
-                client = new Client(this);
-            }
-            catch (SocketException ex)
-            {
-                MessageBox.Show("Server is unavailable. Try again later! " + ex.Message);
+                try
+                {
+                    client = new Client(this);
+                }
+                catch
+                {
+                    MessageBox.Show("Server is unavailable!");
+                }
             }
         }
         public void PrintMessage(string message)
@@ -149,6 +154,12 @@ namespace ChessAndAHalf
             game.SelectPiece(row, col, red);
             DrawGameArea();
         }
-
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (client != null)
+            {
+                client.Disconnect();
+            }
+        }
     }
 }

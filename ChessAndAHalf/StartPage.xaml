@@ -1,0 +1,48 @@
+﻿<Window x:Class="ChessAndAHalf.StartPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChessAndAHalf"
+        mc:Ignorable="d"
+        Title="StartPage" Width="780" Height="700">
+    <Grid Background="Black">
+        <Label Content="Chess and a Half&#xD;&#xA;" HorizontalAlignment="Left" Margin="90,69,0,0" VerticalAlignment="Top" Height="82" Width="606" FontSize="70" FontFamily="Arial Rounded MT Bold" FontWeight="Bold" RenderTransformOrigin="0.5,0.5">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="-0.144"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="-0.664"/>
+                </TransformGroup>
+            </Label.RenderTransform>
+            <Label.Foreground>
+                <SolidColorBrush Color="#FFFBFAFA" Opacity="0.785"/>
+            </Label.Foreground>
+        </Label>
+        <Image HorizontalAlignment="Left" Height="397" Margin="-1,286,0,0" VerticalAlignment="Top" Width="1809" Source="..\..\Resources\chesshd.jpg" RenderTransformOrigin="0.619,0.505">
+            <Image.OpacityMask>
+                <RadialGradientBrush>
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </RadialGradientBrush>
+            </Image.OpacityMask>
+        </Image>
+        <Button x:Name="Robot" Content="Robot" HorizontalAlignment="Left" Margin="418,222,0,0" VerticalAlignment="Top" Height="62" Width="253" RenderTransformOrigin="0.841,-1.305" Click="Button_Click" BorderBrush="White" Foreground="#FF040000" FontFamily="Arial Rounded MT Bold" FontSize="26">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA6D0E1" Offset="0.157"/>
+                    <GradientStop Color="#FF63808B" Offset="0.958"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button x:Name="Multiplayer" Content="Multiplayer" HorizontalAlignment="Left" Margin="133,223,0,0" VerticalAlignment="Top" Height="62" Width="242" RenderTransformOrigin="0.841,-1.305" Click="Button_Click" BorderBrush="White" Foreground="#FF040000" FontFamily="Arial Rounded MT Bold" FontSize="26">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA6D0E1" Offset="0.157"/>
+                    <GradientStop Color="#FF63808B" Offset="0.958"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+    </Grid>
+</Window>
