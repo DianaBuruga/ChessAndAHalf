@@ -16,18 +16,19 @@ namespace ChessAndAHalf
     /// </summary>
     public partial class MainWindow : Window
     {
+        public bool isAIMoving { get; set; }
+
         string gameMode;
-        int difficulty;
         const int SquareSize = 50;
         Client client;
         Game game;
         public PlayerColor MyColor { get; set; }
-        public MainWindow(string gameMode, int difficulty=0)
+        public MainWindow(string gameMode, int difficulty = 0)
         {
             InitializeComponent();
-            game = new Game(true);
+            isAIMoving = false;
+            game = new Game(difficulty, true, this);
             this.gameMode = gameMode;
-            this.difficulty = difficulty;
             if (gameMode == "Multiplayer")
             {
                 try
@@ -49,7 +50,7 @@ namespace ChessAndAHalf
             DrawGameArea();
         }
 
-        private void DrawGameArea()
+        public void DrawGameArea()
         {
             bool red;
             for (int row = 0; row < game.Board.Size; row++)
@@ -126,6 +127,11 @@ namespace ChessAndAHalf
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if(isAIMoving)
+            {
+                return;
+            }
+
             var image = sender as Image;
             string tag = image.Tag.ToString();
             string[] rowColRed = tag.Split('/');

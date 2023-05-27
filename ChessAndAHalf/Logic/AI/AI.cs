@@ -11,6 +11,7 @@ namespace ChessAndAHalf.Logic
     public class AI
     {
         private int _depth;
+        private Dictionary<Board, int> transpositionTable = new Dictionary<Board, int>();
 
         public AI(int depth)
         {
@@ -28,6 +29,12 @@ namespace ChessAndAHalf.Logic
 
         private int Minimax(Board board, int depth, int alpha, int beta, bool isMaximizingPlayer)
         {
+
+            if (transpositionTable.TryGetValue(board, out int cachedValue) && depth > 0)
+            {
+                return cachedValue;
+            }
+
             if (depth == 0)
                 return CalculatePoint(board);
 
@@ -53,6 +60,11 @@ namespace ChessAndAHalf.Logic
                     }
                 }
 
+                if (!transpositionTable.ContainsKey(board) && depth > 0)
+                {
+                    transpositionTable.Add(board, bestValue);
+                }
+
                 return bestValue;
             }
             else
@@ -75,6 +87,11 @@ namespace ChessAndAHalf.Logic
                     {
                         break;
                     }
+                }
+
+                if (!transpositionTable.ContainsKey(board) && depth > 0)
+                {
+                    transpositionTable.Add(board, bestValue);
                 }
 
                 return bestValue;
@@ -151,5 +168,6 @@ namespace ChessAndAHalf.Logic
 
             return material;
         }
+
     }
 }

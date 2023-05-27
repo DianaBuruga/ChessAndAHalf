@@ -5,6 +5,9 @@ using ChessAndAHalf.Data.Model.Pieces;
 using ChessAndAHalf.Logic.Engine;
 using System.Net.Sockets;
 using System.Windows.Documents;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ChessAndAHalf.Logic
 {
@@ -18,14 +21,16 @@ namespace ChessAndAHalf.Logic
         public string message { get; set; }
         private bool IsAI;
         private AI AIPlayer;
+        private MainWindow mainWindow;
 
-        public Game(bool isAI)
+        public Game(int difficulty, bool isAI, MainWindow mainWindow)
         {
             Board = new Board();
             SelectedPiece = null;
             TriggerEnPassant = null;
             IsAI = isAI;
-            AIPlayer = new AI(1);
+            AIPlayer = new AI(difficulty);
+            this.mainWindow = mainWindow;
         }
 
         static bool IsPortInUse(int port)
@@ -62,6 +67,10 @@ namespace ChessAndAHalf.Logic
                         TriggerEnPassant.Occupant = null;   //captura piesa en passant
                     }
                     CapturePiece(selectedSquare);
+                    if (IsAI)
+                    {
+                        Task computationTask = Task.Run(() => PerformAIComputation());
+                    }
                     ChangeTurn();
                     return;
                 }
@@ -77,6 +86,12 @@ namespace ChessAndAHalf.Logic
                 else
                 {
                     MovePiece(selectedSquare);
+
+                    if (IsAI)
+                    {
+                        Task computationTask = Task.Run(() => PerformAIComputation());
+                    }
+
                     ChangeTurn();
                     return;
                 }
@@ -99,7 +114,24 @@ namespace ChessAndAHalf.Logic
                 }
             }
         }
-        public void MovePiece(Square selectedSquare, bool first = true)
+
+        public async Task PerformAIComputation()
+        {
+            mainWindow.isAIMoving = true;
+            Board.currentPlayer = PlayerColor.BLACK;
+            Move move = AIPlayer.GetBestMove(Board);
+            SelectedPiece = Board.GetSquare(move.Tile.Row, move.Tile.Column);
+            MovePiece(Board.GetSquare(move.Next.Row, move.Next.Column));
+
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                mainWindow.DrawGameArea();
+                mainWindow.isAIMoving = false;
+            });
+        }
+
+
+        public void MovePiece(Square selectedSquare)
         { 
             VerifyEnPassant(selectedSquare);
             selectedSquare.Occupant = SelectedPiece.Occupant;
@@ -110,38 +142,15 @@ namespace ChessAndAHalf.Logic
                 selectedSquare.Occupant.IsFirstMove = false;
             }
             VerifyPromotion(selectedSquare);
-
-            if (first == false)
-                return;
-
-            if (IsAI)
-            {
-                Board.currentPlayer = PlayerColor.BLACK;
-                Move move = AIPlayer.GetBestMove(Board);
-                SelectedPiece = Board.GetSquare(move.Tile.Row, move.Tile.Column);
-                MovePiece(Board.GetSquare(move.Next.Row, move.Next.Column), false);
-            }
-
         }
 
-        public void CapturePiece(Square selectedSquare, bool first = true)
+        public void CapturePiece(Square selectedSquare)
         {
             Board.ClearCaptures();
                      
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
             VerifyPromotion(selectedSquare);
-
-            if (first == false)
-                return;
-
-            if (IsAI)
-            {
-                Board.currentPlayer = PlayerColor.BLACK;
-                Move move = AIPlayer.GetBestMove(Board);
-                SelectedPiece = Board.GetSquare(move.Tile.Row, move.Tile.Column);
-                MovePiece(Board.GetSquare(move.Next.Row, move.Next.Column), false);
-            }
         }
 
         public void VerifyPromotion(Square selectedSquare)
