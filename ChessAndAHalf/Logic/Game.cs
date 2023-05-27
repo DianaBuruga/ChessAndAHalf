@@ -149,9 +149,42 @@ namespace ChessAndAHalf.Logic
             }
             if (type.Equals(typeof(Pawn)))
             {
-                //fereastra noua cu alegeri
-                //pion promoveaza in Queen, Rook, Bishop, Knight, Cat or Guard 
-                //selectedSquare.Occupant = new Alegere(selectedSquare.Occupant.Color);
+                PromotionWindow promotionWindow = new PromotionWindow(currentPlayer);
+                bool? dialogResult = promotionWindow.ShowDialog();
+                string info;
+
+                if (dialogResult == true)
+                {
+                    info = promotionWindow.promotionPiece;
+                }
+                else
+                {
+                    info = promotionWindow.promotionPiece;
+                }
+
+                switch (info)
+                {
+                    case "Knight":
+                        selectedSquare.Occupant = new Knight(selectedSquare.Occupant.Color);
+                        break;
+                    case "Cat":
+                        selectedSquare.Occupant = new Cat(selectedSquare.Occupant.Color);
+                        break;
+                    case "Guard":
+                        selectedSquare.Occupant = new Guard(selectedSquare.Occupant.Color);
+                        break;
+                    case "Rook":
+                        selectedSquare.Occupant = new Rook(selectedSquare.Occupant.Color);
+                        break;
+                    case "Bishop":
+                        selectedSquare.Occupant = new Bishop(selectedSquare.Occupant.Color);
+                        break;
+                    case "Queen":
+                        selectedSquare.Occupant = new Queen(selectedSquare.Occupant.Color);
+                        break;
+                    default: 
+                        break;
+                }
             }
 
         }
