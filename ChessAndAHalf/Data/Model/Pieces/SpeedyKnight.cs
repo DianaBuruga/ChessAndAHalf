@@ -2,12 +2,15 @@
 
 namespace ChessAndAHalf.Data.Model.Pieces
 {
-    internal class SpeedyKnight : Piece
+    public class SpeedyKnight : Piece
     {
         public SpeedyKnight(PlayerColor color) : base(color)
         {
 
         }
+
+        public override int Points => 40;
+
         public override string GetImagePath()
         {
             return Color == PlayerColor.WHITE ? "../../Images/Pieces/whiteSpeedyKnight.png" : "../../Images/Pieces/blackSpeedyKnight.png";

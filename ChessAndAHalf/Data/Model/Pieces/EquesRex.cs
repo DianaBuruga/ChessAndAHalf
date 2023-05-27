@@ -2,11 +2,13 @@
 
 namespace ChessAndAHalf.Data.Model.Pieces
 {
-    class EquesRex : Piece
+    public class EquesRex : Piece
     {
         public EquesRex(PlayerColor color) : base(color)
         {
         }
+
+        public override int Points => 35;
 
         public override string GetImagePath()
         {

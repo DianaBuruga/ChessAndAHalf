@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\Model\Move.cs" />
     <Compile Include="Difficulty.xaml.cs">
       <DependentUpon>Difficulty.xaml</DependentUpon>
     </Compile>
@@ -91,6 +92,7 @@
     <Compile Include="Data\Model\PlayerColor.cs" />
     <Compile Include="Data\Model\Position.cs" />
     <Compile Include="Data\Model\Square.cs" />
+    <Compile Include="Logic\AI\AI.cs" />
     <Compile Include="Logic\Engine\CheckDetector.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -171,13 +173,7 @@
     <Resource Include="Images\Pieces\whiteSpeedyKnight.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\chess.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\chesshd.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\chess.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\background.jpg" />

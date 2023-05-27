@@ -28,7 +28,7 @@
                 </RadialGradientBrush>
             </Image.OpacityMask>
         </Image>
-        <Button x:Name="Robot" Content="Robot" HorizontalAlignment="Left" Margin="418,222,0,0" VerticalAlignment="Top" Height="62" Width="253" RenderTransformOrigin="0.841,-1.305" Click="Button_Click" BorderBrush="White" Foreground="#FF040000" FontFamily="Arial Rounded MT Bold" FontSize="26">
+        <Button x:Name="Robot" Content="AI" HorizontalAlignment="Left" Margin="418,222,0,0" VerticalAlignment="Top" Height="62" Width="253" RenderTransformOrigin="0.841,-1.305" Click="Button_Click" BorderBrush="White" Foreground="#FF040000" FontFamily="Arial Rounded MT Bold" FontSize="26">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFA6D0E1" Offset="0.157"/>

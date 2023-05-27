@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ChessAndAHalf.Data.Model.Pieces;
 using ChessAndAHalf.Logic.Engine;
 using System.Net.Sockets;
+using System.Windows.Documents;
 
 namespace ChessAndAHalf.Logic
 {
@@ -11,17 +12,20 @@ namespace ChessAndAHalf.Logic
     {
         public Board Board { get; private set; }
         public Square SelectedPiece { get; private set; }
-        public PlayerColor currentPlayer { get; set; }
-        private List<Pawn> enPassant = new List<Pawn>();
-        private Square triggerEnPassant;
-        private bool isEnPassant;
+        private List<Pawn> EnPassant = new List<Pawn>();
+        private Square TriggerEnPassant;
+        private bool IsEnPassant;
         public string message { get; set; }
-        public Game()
+        private bool IsAI;
+        private AI AIPlayer;
+
+        public Game(bool isAI)
         {
             Board = new Board();
             SelectedPiece = null;
-            triggerEnPassant = null;
-            currentPlayer = PlayerColor.WHITE;
+            TriggerEnPassant = null;
+            IsAI = isAI;
+            AIPlayer = new AI(1);
         }
 
         static bool IsPortInUse(int port)
@@ -55,7 +59,7 @@ namespace ChessAndAHalf.Logic
                 {
                     if (isHighlighted)
                     {
-                        triggerEnPassant.Occupant = null;   //captura piesa en passant
+                        TriggerEnPassant.Occupant = null;   //captura piesa en passant
                     }
                     CapturePiece(selectedSquare);
                     ChangeTurn();
@@ -83,7 +87,7 @@ namespace ChessAndAHalf.Logic
                     if (selectedSquare.Occupant.Captures.Contains(position))
                     {
                         Board.GetSquare(position.Row, position.Column).IsCaptured = true;
-                        if (triggerEnPassant != null && Board.GetSquare(position.Row, position.Column).Occupant == null)
+                        if (TriggerEnPassant != null && Board.GetSquare(position.Row, position.Column).Occupant == null)
                         {
                             Board.GetSquare(position.Row, position.Column).IsHighlighted = true;
                         }
@@ -95,8 +99,8 @@ namespace ChessAndAHalf.Logic
                 }
             }
         }
-        public void MovePiece(Square selectedSquare)
-        {
+        public void MovePiece(Square selectedSquare, bool first = true)
+        { 
             VerifyEnPassant(selectedSquare);
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
@@ -106,16 +110,38 @@ namespace ChessAndAHalf.Logic
                 selectedSquare.Occupant.IsFirstMove = false;
             }
             VerifyPromotion(selectedSquare);
-            
+
+            if (first == false)
+                return;
+
+            if (IsAI)
+            {
+                Board.currentPlayer = PlayerColor.BLACK;
+                Move move = AIPlayer.GetBestMove(Board);
+                SelectedPiece = Board.GetSquare(move.Tile.Row, move.Tile.Column);
+                MovePiece(Board.GetSquare(move.Next.Row, move.Next.Column), false);
+            }
+
         }
 
-        public void CapturePiece(Square selectedSquare)
+        public void CapturePiece(Square selectedSquare, bool first = true)
         {
             Board.ClearCaptures();
                      
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
             VerifyPromotion(selectedSquare);
+
+            if (first == false)
+                return;
+
+            if (IsAI)
+            {
+                Board.currentPlayer = PlayerColor.BLACK;
+                Move move = AIPlayer.GetBestMove(Board);
+                SelectedPiece = Board.GetSquare(move.Tile.Row, move.Tile.Column);
+                MovePiece(Board.GetSquare(move.Next.Row, move.Next.Column), false);
+            }
         }
 
         public void VerifyPromotion(Square selectedSquare)
@@ -149,7 +175,7 @@ namespace ChessAndAHalf.Logic
             }
             if (type.Equals(typeof(Pawn)))
             {
-                PromotionWindow promotionWindow = new PromotionWindow(currentPlayer);
+                PromotionWindow promotionWindow = new PromotionWindow(Board.currentPlayer);
                 bool? dialogResult = promotionWindow.ShowDialog();
                 string info;
 
@@ -197,34 +223,34 @@ namespace ChessAndAHalf.Logic
         public bool VerifyIfISelectMyPiece(Square selectedSquare)
         {
             return selectedSquare != null && selectedSquare.Occupant != null &&
-                selectedSquare.Occupant.Color == currentPlayer;
+                selectedSquare.Occupant.Color == Board.currentPlayer;
         }
 
         public bool VerifyIfIMoveMyPiece(Square selectedSquare)
         {
             return selectedSquare != null && selectedSquare.Occupant == null &&
-                SelectedPiece.Occupant.Color == currentPlayer;
+                SelectedPiece.Occupant.Color == Board.currentPlayer;
         }
         public bool VerifyIfICapturePiece(bool red)
         {
             return red && SelectedPiece != null && SelectedPiece.Occupant != null
-                && SelectedPiece.Occupant.Color == currentPlayer;
+                && SelectedPiece.Occupant.Color == Board.currentPlayer;
         }
 
         public void ChangeTurn()
         {
-            if (CheckDetector.IsCheckMate(Board, currentPlayer) == true)
+            if (CheckDetector.IsCheckMate(Board, Board.currentPlayer) == true)
             {
                 return;
             }
 
-            if(currentPlayer == PlayerColor.WHITE)
+            if(Board.currentPlayer == PlayerColor.WHITE)
             {
-                currentPlayer = PlayerColor.BLACK;
+                Board.currentPlayer = PlayerColor.BLACK;
             }
             else
             {
-                currentPlayer = PlayerColor.WHITE;
+                Board.currentPlayer = PlayerColor.WHITE;
             }
         }
 
@@ -243,11 +269,11 @@ namespace ChessAndAHalf.Logic
                         piece=square.Occupant;
                         if (piece != null && piece.GetType().Equals(typeof(Pawn)))
                         {
-                            isEnPassant = true;
+                            IsEnPassant = true;
                             pawn = (Pawn)piece;
                             pawn.EnPassantLeft = true;
-                            enPassant.Add(pawn);
-                            triggerEnPassant = selectedSquare;
+                            EnPassant.Add(pawn);
+                            TriggerEnPassant = selectedSquare;
                         }
                     }
                     square = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() - 1);
@@ -256,11 +282,11 @@ namespace ChessAndAHalf.Logic
                         piece = square.Occupant;
                         if (piece != null && piece.GetType().Equals(typeof(Pawn)))
                         {
-                            isEnPassant = true;
+                            IsEnPassant = true;
                             pawn = (Pawn)piece;
                             pawn.EnPassantRight = true;
-                            enPassant.Add(pawn);
-                            triggerEnPassant = selectedSquare;
+                            EnPassant.Add(pawn);
+                            TriggerEnPassant = selectedSquare;
                         }
                     }
                 }
@@ -269,18 +295,18 @@ namespace ChessAndAHalf.Logic
 
         public void ClearEnPassant()
         {
-            if (triggerEnPassant != null && triggerEnPassant.Occupant != null
-                    && triggerEnPassant.Occupant.Color == currentPlayer)
+            if (TriggerEnPassant != null && TriggerEnPassant.Occupant != null
+                    && TriggerEnPassant.Occupant.Color == Board.currentPlayer)
             {
-                if (isEnPassant)
+                if (IsEnPassant)
                 {
-                    isEnPassant = false;
-                    foreach (Pawn pawn in enPassant)
+                    IsEnPassant = false;
+                    foreach (Pawn pawn in EnPassant)
                     {
                         pawn.EnPassantLeft = false;
                         pawn.EnPassantRight = false;
                     }
-                    enPassant.Clear();
+                    EnPassant.Clear();
                 }
             }
         }

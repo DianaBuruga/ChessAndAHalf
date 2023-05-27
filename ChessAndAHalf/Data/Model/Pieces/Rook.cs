@@ -2,12 +2,15 @@
 
 namespace ChessAndAHalf.Data.Model.Pieces
 {
-    internal class Rook : Piece
+    public class Rook : Piece
     {
         public Rook(PlayerColor color) : base(color)
         {
 
         }
+
+        public override int Points => 50;
+
         public override string GetImagePath()
         {
             return Color == PlayerColor.WHITE ? "../../Images/Pieces/whiteRook.png" : "../../Images/Pieces/blackRook.png";

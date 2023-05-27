@@ -2,11 +2,13 @@
 
 namespace ChessAndAHalf.Data.Model.Pieces
 {
-    class King : Piece
+    public class King : Piece
     {
         public King(PlayerColor color) : base(color)
         {
         }
+
+        public override int Points => 2000;
 
         public override string GetImagePath()
         {

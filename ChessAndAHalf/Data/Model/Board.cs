@@ -1,6 +1,7 @@
 ﻿using ChessAndAHalf.Data.Model.Pieces;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
@@ -9,10 +10,12 @@ namespace ChessAndAHalf.Data.Model
     public class Board
     {
         private Square[,] squares;
+        public PlayerColor currentPlayer { get; set; }
         public int Size { get; set; }
 
         public Board()
         {
+            currentPlayer = PlayerColor.WHITE;
             Size = 12;
 
             squares = new Square[Size, Size];
@@ -169,6 +172,25 @@ namespace ChessAndAHalf.Data.Model
             }
 
             return clonedboard;
+        }
+
+        public List<Move> GetAllLegalMoves(PlayerColor playerColor, bool filter = true)
+        {
+            List<Move> allLegalMoves = new List<Move>();
+            List<Square> allSquaresWithPieces = GetSquaresWithPiece(playerColor);
+
+            foreach (var square in allSquaresWithPieces)
+            {
+                List<Position> legalMoves = square.Occupant.GetLegalMoves(this, square);
+                legalMoves.AddRange(square.Occupant.Captures);
+
+                foreach (var move in legalMoves)
+                {
+                    allLegalMoves.Add(new Move(square.Position, move));
+                }
+            }
+
+            return allLegalMoves;
         }
     }
 }

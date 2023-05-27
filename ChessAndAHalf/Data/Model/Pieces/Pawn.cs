@@ -2,10 +2,13 @@
 
 namespace ChessAndAHalf.Data.Model.Pieces
 {
-    internal class Pawn : Piece
+    public class Pawn : Piece
     {
         public bool EnPassantLeft { set; get; }
         public bool EnPassantRight { set; get; }
+
+        public override int Points => 10;
+
         public Pawn(PlayerColor color) : base(color)
         {
 

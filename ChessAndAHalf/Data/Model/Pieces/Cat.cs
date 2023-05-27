@@ -8,6 +8,8 @@ namespace ChessAndAHalf.Data.Model.Pieces
         {
         }
 
+        public override int Points => 35;
+
         public override string GetImagePath()
         {
             return Color == PlayerColor.WHITE ? "../../Images/Pieces/whiteCat.png" : "../../Images/Pieces/blackCat.png";

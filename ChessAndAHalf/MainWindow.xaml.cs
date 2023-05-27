@@ -25,7 +25,7 @@ namespace ChessAndAHalf
         public MainWindow(string gameMode, int difficulty=0)
         {
             InitializeComponent();
-            game = new Game();
+            game = new Game(true);
             this.gameMode = gameMode;
             this.difficulty = difficulty;
             if (gameMode == "Multiplayer")
@@ -134,10 +134,10 @@ namespace ChessAndAHalf
             bool red = Boolean.Parse(rowColRed[2]);
             if (client != null)
             {
-                if (game.currentPlayer == MyColor)
+                if (game.Board.currentPlayer == MyColor)
                 {
                     Start(row, col, red);
-                    if (game.currentPlayer != MyColor)
+                    if (game.Board.currentPlayer != MyColor)
                     {
                         client.SendMessages(game.message);
                         game.message = "";
