@@ -1,4 +1,5 @@
 ﻿using ChessAndAHalf.Data.Model.Pieces;
+using ChessAndAHalf.Logic.Engine;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -182,6 +183,7 @@ namespace ChessAndAHalf.Data.Model
             foreach (var square in allSquaresWithPieces)
             {
                 List<Position> legalMoves = square.Occupant.GetLegalMoves(this, square);
+                //legalMoves = CheckDetector.FilterPositionsByCheck(legalMoves, square, this);
                 legalMoves.AddRange(square.Occupant.Captures);
 
                 foreach (var move in legalMoves)

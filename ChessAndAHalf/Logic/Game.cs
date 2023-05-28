@@ -250,6 +250,7 @@ namespace ChessAndAHalf.Logic
         {
             if (CheckDetector.IsCheckMate(Board, Board.currentPlayer) == true)
             {
+                MessageBox.Show("Check Mate!");
                 return;
             }
 
