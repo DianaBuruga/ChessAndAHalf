@@ -32,9 +32,10 @@ namespace ChessAndAHalf.Logic.Engine
         public static List<Position> FilterPositionsByCheck(List<Position> positions, Square initialSquare, Board board) { 
             List<Position> result = new List<Position>();
 
+            Board clonedBoard = board.CloneBoard();
             foreach (Position position in positions)
             {
-                if(IsGoodPosition(position, initialSquare, board) == true)
+                if(IsGoodPosition(position, initialSquare, clonedBoard) == true)
                     result.Add(position);
             }
 
@@ -46,13 +47,10 @@ namespace ChessAndAHalf.Logic.Engine
             bool result; ;
             PlayerColor playerColor = initialSquare.Occupant.Color;
             Position initialPosition = new Position(initialSquare.GetRow(), initialSquare.GetColumn());
-            Piece piece = initialSquare.Occupant;
-            Board clonedBoard = board.CloneBoard();
+            Move move = new Move(initialPosition, position);
+            Piece removedPiece = DoMove(board, move);
 
-            clonedBoard.RemovePiece(initialPosition);
-            clonedBoard.AddPiece(position, piece);
-
-            if(IsKingInCheck(clonedBoard, playerColor))
+            if(IsKingInCheck(board, playerColor))
             {
                 result = false;
             }
@@ -61,10 +59,42 @@ namespace ChessAndAHalf.Logic.Engine
                 result = true;
             }
 
-            clonedBoard.RemovePiece(position);
-            clonedBoard.AddPiece(initialPosition, piece);
+            UndoMove(board, move, removedPiece);
 
             return result;
+        }
+
+        private static Piece DoMove(Board board, Move move)
+        {
+            Piece removedPiece = null;
+
+            Square sourceSquare = board.GetSquare(move.Tile.Row, move.Tile.Column);
+            Square targetSquare = board.GetSquare(move.Next.Row, move.Next.Column);
+
+            if (targetSquare.Occupant != null)
+            {
+                removedPiece = targetSquare.Occupant;
+            }
+
+            Piece movingPiece = sourceSquare.Occupant;
+            board.RemovePiece(move.Tile);
+            board.AddPiece(move.Next, movingPiece);
+
+            return removedPiece;
+        }
+
+        private static void UndoMove(Board board, Move move, Piece removedPiece)
+        {
+            Square sourceSquare = board.GetSquare(move.Next.Row, move.Next.Column);
+
+            Piece movingPiece = sourceSquare.Occupant;
+            board.RemovePiece(move.Next);
+            board.AddPiece(move.Tile, movingPiece);
+
+            if (removedPiece != null)
+            {
+                board.AddPiece(move.Next, removedPiece);
+            }
         }
 
         public static bool IsCheckMate(Board board, PlayerColor player)

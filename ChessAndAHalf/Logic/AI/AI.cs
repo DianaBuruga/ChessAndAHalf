@@ -5,18 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace ChessAndAHalf.Logic
 {
     public class AI
     {
         private int _depth;
-        private Dictionary<Board, int> transpositionTable = new Dictionary<Board, int>();
 
         public AI(int depth)
         {
             _depth = depth;
         }
+
 
         private Board GenerateMovedBoard(Board oldBoard, Move move)
         {
@@ -30,72 +31,55 @@ namespace ChessAndAHalf.Logic
         private int Minimax(Board board, int depth, int alpha, int beta, bool isMaximizingPlayer)
         {
 
-            if (transpositionTable.TryGetValue(board, out int cachedValue) && depth > 0)
-            {
-                return cachedValue;
-            }
-
             if (depth == 0)
+            {
                 return CalculatePoint(board);
+            }
 
-            if (isMaximizingPlayer)
+            List<Move> possibleMoves = isMaximizingPlayer ? board.GetAllLegalMoves(PlayerColor.BLACK) : board.GetAllLegalMoves(PlayerColor.WHITE);
+
+            int bestValue = isMaximizingPlayer ? int.MinValue : int.MaxValue;
+
+            List<Move> orderedMoves = possibleMoves.OrderByDescending(move => GetMoveOrderingHeuristic(move, board)).ToList();
+
+            foreach (var move in orderedMoves)
             {
-                int bestValue = int.MinValue;
+                Piece removedPiece = DoMove(board, move);
 
-                List<Move> possibleMoves = board.GetAllLegalMoves(PlayerColor.BLACK);
+                int value = Minimax(board, depth - 1, alpha, beta, !isMaximizingPlayer);
 
-                foreach (var move in possibleMoves)
+                UndoMove(board, move, removedPiece);
+
+                if (isMaximizingPlayer)
                 {
-                    Board newBoard = GenerateMovedBoard(board, move);
-
-                    int value = Minimax(newBoard, depth - 1, alpha, beta, false);
-
                     bestValue = Math.Max(value, bestValue);
-
                     alpha = Math.Max(alpha, value);
-
-                    if (beta <= alpha)
-                    {
-                        break;
-                    }
                 }
-
-                if (!transpositionTable.ContainsKey(board) && depth > 0)
+                else
                 {
-                    transpositionTable.Add(board, bestValue);
-                }
-
-                return bestValue;
-            }
-            else
-            {
-                int bestValue = int.MaxValue;
-
-                List<Move> possibleMoves = board.GetAllLegalMoves(PlayerColor.WHITE);
-
-                foreach (var move in possibleMoves)
-                {
-                    Board newBoard = GenerateMovedBoard(board, move);
-
-                    int value = Minimax(board, depth - 1, alpha, beta, true);
-
                     bestValue = Math.Min(value, bestValue);
-
                     beta = Math.Min(beta, value);
-
-                    if (beta <= alpha)
-                    {
-                        break;
-                    }
                 }
 
-                if (!transpositionTable.ContainsKey(board) && depth > 0)
+                if (beta <= alpha)
                 {
-                    transpositionTable.Add(board, bestValue);
+                    break;
                 }
-
-                return bestValue;
             }
+
+            return bestValue;
+        }
+
+        int GetMoveOrderingHeuristic(Move move, Board board)
+        {
+            int moveScore = 0;
+
+            if (board.GetSquare(move.Next.Row, move.Next.Column).Occupant != null)
+            {
+                moveScore += 10 * GetPieceValue(board, move.Next) - GetPieceValue(board, move.Tile);
+            }
+
+            return moveScore;
         }
 
 
@@ -114,10 +98,12 @@ namespace ChessAndAHalf.Logic
             }
 
             List<Move> possibleMoves = board.GetAllLegalMoves(board.currentPlayer);
+            
+            Board newBoard = board.CloneBoard();
 
             foreach (var move in possibleMoves)
             {
-                Board newBoard = GenerateMovedBoard(board, move);
+                Piece removedPiece = DoMove(newBoard, move);
 
                 int value = Minimax(newBoard, _depth, int.MinValue, int.MaxValue, turn);
 
@@ -126,9 +112,44 @@ namespace ChessAndAHalf.Logic
                     bestValue = value;
                     bestMove = move;
                 }
+
+                UndoMove(newBoard, move, removedPiece);
             }
 
             return bestMove;
+        }
+
+        private Piece DoMove(Board board, Move move)
+        {
+            Piece removedPiece = null;
+
+            Square sourceSquare = board.GetSquare(move.Tile.Row, move.Tile.Column);
+            Square targetSquare = board.GetSquare(move.Next.Row, move.Next.Column);
+
+            if (targetSquare.Occupant != null)
+            {
+                removedPiece = targetSquare.Occupant;
+            }
+
+            Piece movingPiece = sourceSquare.Occupant;
+            board.RemovePiece(move.Tile);
+            board.AddPiece(move.Next, movingPiece);
+
+            return removedPiece;
+        }
+
+        private void UndoMove(Board board, Move move, Piece removedPiece)
+        {
+            Square sourceSquare = board.GetSquare(move.Next.Row, move.Next.Column);
+
+            Piece movingPiece = sourceSquare.Occupant;
+            board.RemovePiece(move.Next);
+            board.AddPiece(move.Tile, movingPiece);
+
+            if (removedPiece != null)
+            {
+                board.AddPiece(move.Next, removedPiece);
+            }
         }
 
 
