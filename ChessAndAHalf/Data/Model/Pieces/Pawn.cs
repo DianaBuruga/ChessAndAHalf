@@ -11,7 +11,7 @@ namespace ChessAndAHalf.Data.Model.Pieces
 
         public Pawn(PlayerColor color) : base(color)
         {
-
+            IsFirstMove = true;
         }
         public override string GetImagePath()
         {
@@ -29,11 +29,14 @@ namespace ChessAndAHalf.Data.Model.Pieces
 
             int[,] directions = new int[,] { { row, 0 }, { row, -1 }, { row, 1 } };
 
-            int maxLevel = 0;
+            int maxLevel;
             int index = 0, level;
             maxLevel = isInFirstHalf(currentRow);
-
-            for (level = 1; level <= maxLevel; level++) 
+            if (!IsFirstMove)
+            {
+                maxLevel = 1;
+            }
+            for (level = 1; level <= maxLevel; level++)
             {
                 Square square = board.GetSquare(currentRow + (directions[index, 0] * level), currentColumn + (directions[index, 1] * level));
 

@@ -141,7 +141,7 @@ namespace ChessAndAHalf.Logic
             selectedSquare.Occupant = SelectedPiece.Occupant;
             SelectedPiece.Occupant = null;
             Type type = selectedSquare.Occupant.GetType();
-            if (type.Equals(typeof(Knight)))
+            if (type.Equals(typeof(Knight)) || type.Equals(typeof(Pawn)))
             {
                 selectedSquare.Occupant.IsFirstMove = false;
             }
@@ -153,6 +153,11 @@ namespace ChessAndAHalf.Logic
             Board.ClearCaptures();
                      
             selectedSquare.Occupant = SelectedPiece.Occupant;
+            Type type = selectedSquare.Occupant.GetType();
+            if (type.Equals(typeof(Knight)) || type.Equals(typeof(Pawn)))
+            {
+                selectedSquare.Occupant.IsFirstMove = false;
+            }
             SelectedPiece.Occupant = null;
             VerifyPromotion(selectedSquare);
         }
@@ -296,7 +301,7 @@ namespace ChessAndAHalf.Logic
                     square = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() + 1);
                     if (square != null) { 
                         piece=square.Occupant;
-                        if (piece != null && piece.GetType().Equals(typeof(Pawn)))
+                        if (piece != null && piece.GetType().Equals(typeof(Pawn))&& piece.Color != SelectedPiece.Occupant.Color)
                         {
                             IsEnPassant = true;
                             pawn = (Pawn)piece;
@@ -309,7 +314,7 @@ namespace ChessAndAHalf.Logic
                     if (square != null)
                     {
                         piece = square.Occupant;
-                        if (piece != null && piece.GetType().Equals(typeof(Pawn)))
+                        if (piece != null && piece.GetType().Equals(typeof(Pawn)) && piece.Color!=SelectedPiece.Occupant.Color)
                         {
                             IsEnPassant = true;
                             pawn = (Pawn)piece;
