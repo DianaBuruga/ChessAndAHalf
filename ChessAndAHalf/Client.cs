@@ -96,6 +96,10 @@ namespace ChessAndAHalf
                         try
                         {
                             var moves = move.Split('#');
+                            if (moves.Length == 4)
+                            {
+                                game.SetPromotion(moves[3]);
+                            }
                             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                             {
                                 game.Start(int.Parse(moves[0]), int.Parse(moves[1]), bool.Parse(moves[2]));

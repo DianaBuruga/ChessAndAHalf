@@ -75,6 +75,7 @@ namespace ChessAndAHalf.Data.Model.Pieces
                     legalMoves.Add(position);
                     captures.Add(position);
                 }
+               // EnPassantLeft =false;
             }
             if (EnPassantRight)
             {
@@ -87,6 +88,7 @@ namespace ChessAndAHalf.Data.Model.Pieces
                     legalMoves.Add(position);
                     captures.Add(position);
                 }
+              //  EnPassantRight =false;
             }
             Captures = captures;
             return legalMoves;

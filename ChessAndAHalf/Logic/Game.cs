@@ -19,6 +19,7 @@ namespace ChessAndAHalf.Logic
         private Square TriggerEnPassant;
         private bool IsEnPassant;
         public string message { get; set; }
+        public string promotion { set; get; }
         private bool IsAI;
         private AI AIPlayer;
         private MainWindow mainWindow;
@@ -28,8 +29,11 @@ namespace ChessAndAHalf.Logic
             Board = new Board();
             SelectedPiece = null;
             TriggerEnPassant = null;
-            IsAI = isAI;
-            AIPlayer = new AI(difficulty);
+            if (isAI)
+            {
+                IsAI = isAI;
+                AIPlayer = new AI(difficulty);
+            }
             this.mainWindow = mainWindow;
         }
 
@@ -184,18 +188,8 @@ namespace ChessAndAHalf.Logic
             }
             if (type.Equals(typeof(Pawn)))
             {
-                PromotionWindow promotionWindow = new PromotionWindow(Board.currentPlayer);
-                bool? dialogResult = promotionWindow.ShowDialog();
                 string info;
-
-                if (dialogResult == true)
-                {
-                    info = promotionWindow.promotionPiece;
-                }
-                else
-                {
-                    info = promotionWindow.promotionPiece;
-                }
+                info = OpenPromotionWindow();
 
                 switch (info)
                 {
@@ -217,13 +211,38 @@ namespace ChessAndAHalf.Logic
                     case "Queen":
                         selectedSquare.Occupant = new Queen(selectedSquare.Occupant.Color);
                         break;
-                    default: 
+                    default:
                         break;
                 }
             }
-
         }
 
+        public string OpenPromotionWindow()
+        {
+            string info;
+            if (promotion == null)
+            {
+                PromotionWindow promotionWindow = new PromotionWindow(Board.currentPlayer);
+                bool? dialogResult = promotionWindow.ShowDialog();
+                
+
+                if (dialogResult == true)
+                {
+                    info = promotionWindow.promotionPiece;
+                }
+                else
+                {
+                    info = promotionWindow.promotionPiece;
+                }
+                message += "#" + info;
+            }
+            else
+            {
+                info = promotion;
+                promotion = null;
+            }
+            return info;
+        }
         public bool VerifyIfIsMyTurn(Square selectedSquare, bool red)
         {
             return VerifyIfISelectMyPiece(selectedSquare) || VerifyIfIMoveMyPiece(selectedSquare) 
@@ -250,6 +269,7 @@ namespace ChessAndAHalf.Logic
         {
             if (CheckDetector.IsCheckMate(Board, Board.currentPlayer) == true)
             {
+                MessageBox.Show("Check Mate");
                 return;
             }
 
@@ -271,7 +291,7 @@ namespace ChessAndAHalf.Logic
             Square square;
             if (type.Equals(typeof(Pawn)))
             {
-                if (Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow()) <=4 && Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow())>1)
+                if (Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow()) <=4 && Math.Abs(selectedSquare.GetRow() - SelectedPiece.GetRow()) > 1)
                 {
                     square = Board.GetSquare(selectedSquare.GetRow(), selectedSquare.GetColumn() + 1);
                     if (square != null) { 

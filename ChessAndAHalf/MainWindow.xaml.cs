@@ -26,11 +26,10 @@ namespace ChessAndAHalf
         public MainWindow(string gameMode, int difficulty = 0)
         {
             InitializeComponent();
-            isAIMoving = false;
-            game = new Game(difficulty, true, this);
             this.gameMode = gameMode;
             if (gameMode == "Multiplayer")
             {
+                game = new Game(0, false, this);
                 try
                 {
                     client = new Client(this);
@@ -38,6 +37,14 @@ namespace ChessAndAHalf
                 catch
                 {
                     MessageBox.Show("Server is unavailable!");
+                }
+            }
+            else
+            {
+                if(gameMode == "Robot")
+                {
+                    isAIMoving = false;
+                    game = new Game(difficulty, true, this);
                 }
             }
         }
@@ -166,6 +173,10 @@ namespace ChessAndAHalf
             {
                 client.Disconnect();
             }
+        }
+        public void SetPromotion(string choose)
+        {
+            game.promotion = choose;
         }
     }
 }
